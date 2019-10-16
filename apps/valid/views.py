@@ -31,7 +31,7 @@ def login(request):
             return redirect("/")
         
         if bcrypt.checkpw(request.POST['password'].encode(), user[0].password.encode()):
-            print(f"Setting session value 'user_id' = {user[0].id}")
+            print(f"LOG - Setting session value 'user_id' = {user[0].id}")
             request.session['user_id'] = user[0].id
             return redirect("/success")
         else:
@@ -41,11 +41,12 @@ def login(request):
 def logout(request):
     request.session.clear()
     messages.success(request, "Log out successful!")
+    print(f"LOG - Log out successful, redirecting to home")  
     return redirect("/")
 
 def success(request):
     context = {
         "user_id" : request.session['user_id']
     }
-    print('Rendering success page')
+    print(f"LOG - Rendering success page")
     return render(request, "valid/success.html", context)
