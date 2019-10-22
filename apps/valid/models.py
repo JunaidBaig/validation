@@ -7,7 +7,7 @@ PASSWORD_REGEX = re.compile(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d,!@#$%^
 
 class UserManager(models.Manager):
     def register(self, postData):
-        messages = []
+        alerts = []
 
         if len(postData['email']) < 1:
             messages.append('Email is required!')
