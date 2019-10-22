@@ -1,34 +1,32 @@
 from django.db import models
 import re
 
-EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
-# regex requires at least 1 number, capital letter, lower case letter, permits some special characters !@#$%^&*+= and must be 8 characters or longer
-PASSWORD_REGEX = re.compile(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d,!@#$%^&*+=]{8,}$')
-
 class UserManager(models.Manager):
     def register(self, postData):
-        messages = []
+        EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+        PASSWORD_REGEX = re.compile(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d,!@#$%^&*+=]{8,}$')
+
+        errors = {}
 
         if len(postData['email']) < 1:
-            messages.append('Email is required!')
-        elif not EMAIL_REGEX.match(postData['email']):
-            messages.append('Invalid Email!')
-        else:
-            check = User.objects.filter(email=postData['email'].lower())
-            if len(check) > 0:
-                messages.append('Email already in use!')
+            errors['email'] = 'Email is required!'
+        if not EMAIL_REGEX.match(postData['email']):
+            errors['email-invalid'] = 'Invalid Email!'
+        check = User.objects.filter(email=postData['email'].lower())
+        if len(check) > 0:
+            errors['email-inuse'] = 'Email already in use!'
 
         if len(postData['password']) < 1:
-            messages.append('Password is required!')
+            errors['password'] = 'Password is required!'
         elif not PASSWORD_REGEX.match(postData['password']):
-            messages.append('Password must contain at least 1 number and capitalization!')
+            errors['password_valid'] = 'Password must contain at least 1 number and capitalization!'
 
         if len(postData['password_confirm']) < 1:
-            messages.append('Confirm password is required!')
+            errors['password_confirm'] = 'Confirm password is required!'
         elif postData['password_confirm'] != postData['password']:
-            messages.append('Password must match Confirm password!')
+            errors['passwords_match'] = 'Password must match Confirm password!'
 
-        return messages
+        return errors
 
     def login(self, postData):
         messages = []
