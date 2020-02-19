@@ -29,6 +29,7 @@
         {% endif %}
         <div class="row">
             <div class="col">
+                <h2>Register:</h2>
                 <form action="/register" method="post">
                     {% csrf_token %}
                     <label for="first_name">First Name:</label>
@@ -45,6 +46,7 @@
                 </form>
             </div>
             <div class="col">
+                <h2>Login:</h2>
                     <form action="/login" method="post">
                         {% csrf_token %}
                         <label for="email">Email:</label>

@@ -4,7 +4,9 @@ import re
 class UserManager(models.Manager):
     def register(self, postData):
 
+        #RegEx for email
         EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+        #RegEx for Password
         PASSWORD_REGEX = re.compile(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d,!@#$%^&*+=]{8,}$')
 
         errors = {}
@@ -43,6 +45,8 @@ class UserManager(models.Manager):
 class User(models.Model):
     email = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     is_admin = models.BooleanField(default=False)
     description = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
